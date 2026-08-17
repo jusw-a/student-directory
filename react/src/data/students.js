@@ -1,4 +1,4 @@
-export const students = [
+export const initialStudents = [
   {
     id: 101,
     name: 'Juan Dela Cruz',
