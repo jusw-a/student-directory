@@ -5,13 +5,13 @@
 // } 
 
 import { useState } from 'react';
-import { initialStudents } from './data/students';
+import { students } from './data/students';
 import StudentDirectory from './components/StudentDirectory';
 import StudentForm from './components/StudentForm';
 import DirectoryControls from './components/DirectoryControls';
 
 export default function App() {
-  const [students, setStudents] = useState(initialStudents);
+  const [students, setStudents] = useState(students);
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all'); // 'all' | 'deansLister' | 'probation'
 
