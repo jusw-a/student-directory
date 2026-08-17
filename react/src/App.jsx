@@ -1,9 +1,3 @@
-// import { students } from './data/students'; 
-// import StudentDirectory from './components/StudentDirectory'; 
-// export default function App() { 
-//  return <StudentDirectory students={students} />; 
-// } 
-
 import { useState } from 'react';
 import { initialStudents } from './data/students';
 import StudentDirectory from './components/StudentDirectory';
@@ -11,27 +5,29 @@ import StudentForm from './components/StudentForm';
 import DirectoryControls from './components/DirectoryControls';
 
 export default function App() {
-  const [students, setStudents] = useState(initialStudents);
+  const [students, setStudents] = useState(initialStudents || []);
   const [searchTerm, setSearchTerm] = useState('');
-  const [statusFilter, setStatusFilter] = useState('all'); // 'all' | 'deansLister' | 'probation'
+  const [statusFilter, setStatusFilter] = useState('all');
 
-  // TODO 1: handleAddStudent(newStudent)
+  // TODO 1: Immutably add new student with unique ID
   const handleAddStudent = (newStudent) => {
     const studentWithId = { ...newStudent, id: Date.now() };
     setStudents((prev) => [...prev, studentWithId]);
   };
 
-  // TODO 2: visibleStudents
+  // TODO 2: Compute visibleStudents using safe property access
   const visibleStudents = students.filter((student) => {
-    const matchesSearch = student.name
+    // Fallback to empty string if student.name is missing/null
+    const studentName = student?.name ?? '';
+    const matchesSearch = studentName
       .toLowerCase()
       .includes(searchTerm.toLowerCase());
 
     let matchesStatus = true;
     if (statusFilter === 'deansLister') {
-      matchesStatus = student.gwa <= 1.75;
+      matchesStatus = Number(student?.gwa) <= 1.75;
     } else if (statusFilter === 'probation') {
-      matchesStatus = student.status === 'On Probation';
+      matchesStatus = student?.status === 'On Probation';
     }
 
     return matchesSearch && matchesStatus;
@@ -40,15 +36,17 @@ export default function App() {
   return (
     <div>
       <h1>Student Directory</h1>
-      {/* TODO 3: pass handleAddStudent */}
+      {/* TODO 3: Pass handleAddStudent prop */}
       <StudentForm onAdd={handleAddStudent} />
+
       <DirectoryControls
         searchTerm={searchTerm}
         onSearchChange={setSearchTerm}
         statusFilter={statusFilter}
         onStatusFilterChange={setStatusFilter}
       />
-      {/* TODO 4: pass visibleStudents, NOT students */}
+
+      {/* TODO 4: Pass derived visibleStudents array */}
       <StudentDirectory students={visibleStudents} />
     </div>
   );
